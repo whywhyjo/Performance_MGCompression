@@ -325,21 +325,24 @@ def performance_comparison (models,eval_mode='micro', baseline = 0.1,save=False)
 ################################## GPU mode ############################
 ########################################################################
 def create_variables_GPU(tensor):
+    device = torch.device("cuda:0")
     if torch.cuda.is_available():
        # print("Variables on Device memory")
-        return Variable(tensor.cuda())
+        return tensor.to(device)
     else:
        # print("Variables on Host memory")
-        return Variable(tensor)
+        return tensor
     
 def model_on_GPU (model):
-    if torch.cuda.device_count() > 1:
+    device = torch.device("cuda:0")
+    if torch.cuda.device_count() > 10:
         print(torch.cuda.device_count(), 'GPUs used!')
-        model = torch.nn.DataParallel(model).cuda()
+        model = torch.nn.DataParallel(model)
+        model.to(device)
 
     elif torch.cuda.is_available():
         print("Model on Device memory")
-        model = model.cuda()
+        model.to(device)
     else:
         print("Model on Host memory")
     return model         
