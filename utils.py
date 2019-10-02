@@ -73,10 +73,9 @@ class batch_dataset (Dataset):
 class DeepModel():
     def __init__(self, model,num_classes=2, criterion= torch.nn.CrossEntropyLoss(), \
                 lr=0.002, decay=1e-5, \
-                note =None):
-        self.m = model
-        if note ==None: # note: distinguishment for same model with other options
-            self.note = datetime.today().strftime("%m%d%H%M_")+str(np.random.randint(10000))
+                note =''):
+        self.m = model        
+        self.note =note+ datetime.today().strftime("%m%d%H%M_")+str(np.random.randint(10000))
         self.name = model._get_name()+self.note 
         self.criterion =criterion
         self.attention = False
@@ -243,7 +242,9 @@ class DeepModel():
         if not os.path.exists('./model/'): os.makedirs('./model/')
         torch.save(self.m,'./model/'+self.name)
         print('*** Complete! Training time:', '{:.3f}'.format(time.process_time() - t),'sec ***')
-          
+        torch.cuda.empty_cache()
+
+
             
 #############################################################    
 ####################### performance evaluation #######################
